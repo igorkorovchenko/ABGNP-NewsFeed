@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">News Feed</string>
+
+    <string name="news_api_key" tools:ignore="TypographyDashes">047ff4c7-dbe8-4e3f-952d-6f1f91634411</string>
+    <string name="news_api_url">https://content.guardianapis.com/search</string>
+    <string name="default_site_url">https://www.theguardian.com/international</string>
+    <string name="json_exception_message">Problem parsing the news JSON results</string>
+    <string name="json_results_list_key">results</string>
+    <string name="json_response_key">response</string>
+    <string name="json_title_key">webTitle</string>
+    <string name="json_section_key">sectionName</string>
+    <string name="json_url_key">webUrl</string>
+    <string name="json_date_key">webPublicationDate</string>
+    <string name="loader_error_response">Error response code:</string>
+    <string name="loader_error_retrieving_json">Problem retrieving the news JSON results.</string>
+    <string name="no_data_available">No date available</string>
+</resources>
