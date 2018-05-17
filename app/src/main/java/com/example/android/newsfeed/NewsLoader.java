@@ -61,18 +61,20 @@ public class NewsLoader extends Loader<List<NewsModel>> {
 
         getTimeTask = new GetNewsTask(newsLoader);
         getTimeTask.execute(
-                getContext().getString(R.string.news_api_url),
-                getContext().getString(R.string.news_api_key),
-                searchString,
-                getContext().getString(R.string.loader_error_response),
-                getContext().getString(R.string.loader_error_retrieving_json),
-                getContext().getString(R.string.json_response_key),
-                getContext().getString(R.string.json_results_list_key),
-                getContext().getString(R.string.json_title_key),
-                getContext().getString(R.string.json_section_key),
-                getContext().getString(R.string.json_url_key),
-                getContext().getString(R.string.json_date_key),
-                getContext().getString(R.string.json_exception_message)
+                getContext().getString(R.string.news_api_url),                  // 0
+                getContext().getString(R.string.news_api_key),                  // 1
+                searchString,                                                   // 2
+                getContext().getString(R.string.loader_error_response),         // 3
+                getContext().getString(R.string.loader_error_retrieving_json),  // 4
+                getContext().getString(R.string.json_response_key),             // 5
+                getContext().getString(R.string.json_results_list_key),         // 6
+                getContext().getString(R.string.json_title_key),                // 7
+                getContext().getString(R.string.json_section_key),              // 8
+                getContext().getString(R.string.json_url_key),                  // 9
+                getContext().getString(R.string.json_date_key),                 // 10
+                getContext().getString(R.string.json_tags_key),                 // 11
+                getContext().getString(R.string.json_author_key),               // 12
+                getContext().getString(R.string.json_exception_message)         // 13
         );
     }
 
@@ -94,9 +96,13 @@ public class NewsLoader extends Loader<List<NewsModel>> {
 
         @Override
         protected List<NewsModel> doInBackground(String... strings) {
+            Log.d(TAG, String.valueOf(strings.length));
             List<NewsModel> jsonResponse = new ArrayList<>();
             StringBuilder urlString = new StringBuilder();
-            urlString.append(strings[0]).append("?api-key=").append(strings[1]).append(strings[2]);
+            urlString.append(strings[0])
+                    .append("?api-key=").append(strings[1])
+                    .append(strings[2])
+                    .append("&show-tags=contributor");
             Log.d(TAG, String.valueOf(urlString));
             URL url = createUrl(String.valueOf(urlString));
             HttpURLConnection urlConnection = null;
@@ -111,14 +117,7 @@ public class NewsLoader extends Loader<List<NewsModel>> {
                     inputStream = urlConnection.getInputStream();
                     jsonResponse = extractNewsFromJson(
                             readFromStream(inputStream),
-                            strings[3],
-                            strings[4],
-                            strings[5],
-                            strings[6],
-                            strings[7],
-                            strings[8],
-                            strings[9],
-                            strings[10]);
+                            strings);
                 } else {
                     Log.e(TAG, strings[3] + urlConnection.getResponseCode());
                 }
@@ -161,30 +160,54 @@ public class NewsLoader extends Loader<List<NewsModel>> {
         }
 
         @Nullable
-        private List<NewsModel> extractNewsFromJson(String newsJson, String... keys) {
+        private List<NewsModel> extractNewsFromJson(String newsJson, String... strings) {
             if (TextUtils.isEmpty(newsJson)) {
                 return null;
             }
 
+            String responseKey      = strings[5];
+            String resultKey        = strings[6];
+            String titleKey         = strings[7];
+            String sectionKey       = strings[8];
+            String urlKey           = strings[9];
+            String dateKey          = strings[10];
+            String tagsKey          = strings[11];
+            String authorKey        = strings[12];
+            String exceptionMessage = strings[13];
+
             try {
                 JSONObject baseJsonResponse = new JSONObject(newsJson);
-                JSONObject newsResponse = baseJsonResponse.getJSONObject(keys[2]);
-                JSONArray newsArray = newsResponse.getJSONArray(keys[3]);
-
+                JSONObject newsResponse = baseJsonResponse.getJSONObject(responseKey);
+                JSONArray newsArray = newsResponse.getJSONArray(resultKey);
                 if (newsArray.length() > 0) {
                     List<NewsModel> newList = new ArrayList<>();
                     for (Integer i = 0; i < newsArray.length(); i++) {
                         JSONObject newsInfo = newsArray.getJSONObject(i);
-                        String newsTitle = newsInfo.getString(keys[4]);
-                        String newsSection = newsInfo.getString(keys[5]);
-                        String newsUrl = newsInfo.getString(keys[6]);
-                        String newsDate = newsInfo.getString(keys[7]);
-                        newList.add(new NewsModel(newsTitle, newsSection, newsUrl, newsDate));
+                        String newsTitle = newsInfo.getString(titleKey);
+                        String newsSection = newsInfo.getString(sectionKey);
+                        String newsUrl = newsInfo.getString(urlKey);
+                        String newsDate = newsInfo.getString(dateKey);
+                        StringBuilder newsAuthor = new StringBuilder();
+                        JSONArray newsTagsArray = newsInfo.getJSONArray(tagsKey);
+                        for (Integer j = 0; j < newsTagsArray.length(); j++) {
+                            JSONObject newsTag = newsTagsArray.getJSONObject(j);
+                            newsAuthor.append(newsTag.getString(authorKey)).append(", ");
+                        }
+                        if (newsAuthor.length() > 0) {
+                            newsAuthor.delete(newsAuthor.lastIndexOf(", "), newsAuthor.length());
+                        }
+                        newList.add(new NewsModel(
+                                newsTitle,
+                                newsSection,
+                                newsUrl,
+                                newsDate,
+                                String.valueOf(newsAuthor)
+                        ));
                     }
                     return newList;
                 }
             } catch (JSONException e) {
-                Log.e(TAG, keys[6], e);
+                Log.e(TAG, exceptionMessage, e);
             }
             return null;
         }

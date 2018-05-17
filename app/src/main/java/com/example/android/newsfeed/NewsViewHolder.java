@@ -20,6 +20,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private TextView newsTitle;
     private TextView newsSection;
     private TextView newsDate;
+    private TextView newsAuthor;
     private String newsURL;
 
     public static NewsViewHolder inflate(ViewGroup parent) {
@@ -32,6 +33,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         newsTitle = itemView.findViewById(R.id.news_title);
         newsSection = itemView.findViewById(R.id.news_section);
         newsDate = itemView.findViewById(R.id.news_date);
+        newsAuthor = itemView.findViewById(R.id.news_author);
         newsURL = "";
     }
 
@@ -42,6 +44,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         newsSection.setOnClickListener(this);
         newsDate.setText(newsModel.getWebPublicationDate());
         newsDate.setOnClickListener(this);
+        newsAuthor.setText(newsModel.getContributor());
         newsURL = newsModel.getWebUrl();
     }
 
