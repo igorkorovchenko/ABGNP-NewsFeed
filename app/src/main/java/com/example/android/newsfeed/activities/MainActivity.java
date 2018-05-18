@@ -1,4 +1,4 @@
-package com.example.android.newsfeed;
+package com.example.android.newsfeed.activities;
 
 import android.app.LoaderManager;
 import android.content.Context;
@@ -14,6 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.android.newsfeed.controllers.NewsListAdapter;
+import com.example.android.newsfeed.controllers.NewsLoader;
+import com.example.android.newsfeed.models.NewsModel;
+import com.example.android.newsfeed.R;
+
 import java.util.List;
 
 /**
@@ -26,7 +32,7 @@ public class MainActivity extends FragmentActivity
                           implements SwipeRefreshLayout.OnRefreshListener,
                                      SearchView.OnQueryTextListener,
                                      LoaderManager.LoaderCallbacks<List<NewsModel>>,
-                                     NewsLoader.OnNewsLoader {
+        NewsLoader.OnNewsLoader {
 
     private static final Integer REFRESH_DELAY = 2400;
 

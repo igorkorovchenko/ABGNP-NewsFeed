@@ -1,8 +1,10 @@
-package com.example.android.newsfeed;
+package com.example.android.newsfeed.controllers;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import com.example.android.newsfeed.models.NewsModel;
 
 import java.util.ArrayList;
 import java.util.List;

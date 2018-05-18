@@ -1,4 +1,4 @@
-package com.example.android.newsfeed;
+package com.example.android.newsfeed.controllers;
 
 import android.content.Context;
 import android.content.Loader;
@@ -8,6 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.example.android.newsfeed.BuildConfig;
+import com.example.android.newsfeed.R;
+import com.example.android.newsfeed.models.NewsModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +43,7 @@ public class NewsLoader extends Loader<List<NewsModel>> {
     private String searchString;
     private OnNewsLoader newsLoader;
 
-    NewsLoader(Context context, Bundle args, OnNewsLoader newsLoader) {
+    public NewsLoader(Context context, Bundle args, OnNewsLoader newsLoader) {
         super(context);
         if (args != null) {
             searchString = args.getString(ARGS_KEY_SEARCH);

@@ -1,4 +1,4 @@
-package com.example.android.newsfeed;
+package com.example.android.newsfeed.models;
 
 /**
  * Model of the news
@@ -13,7 +13,7 @@ public class NewsModel {
     private String webPublicationDate;
     private String contributor;
 
-    NewsModel(String webTitle, String sectionName, String webUrl, String webPublicationDate, String contributor) {
+    public NewsModel(String webTitle, String sectionName, String webUrl, String webPublicationDate, String contributor) {
         this.sectionName = sectionName;
         this.webTitle = webTitle;
         this.webUrl = webUrl;
