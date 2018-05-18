@@ -62,7 +62,7 @@ public class NewsLoader extends Loader<List<NewsModel>> {
         getTimeTask = new GetNewsTask(newsLoader);
         getTimeTask.execute(
                 getContext().getString(R.string.news_api_url),                  // 0
-                getContext().getString(R.string.news_api_key),                  // 1
+                BuildConfig.THE_GUARDIAN_API_KEY,                               // 1
                 searchString,                                                   // 2
                 getContext().getString(R.string.loader_error_response),         // 3
                 getContext().getString(R.string.loader_error_retrieving_json),  // 4

@@ -1,6 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">News Feed</string>
-    <string name="news_api_key" tools:ignore="TypographyDashes">047ff4c7-dbe8-4e3f-952d-6f1f91634411</string>
     <string name="news_api_url" translatable="false">https://content.guardianapis.com/search</string>
     <string name="default_site_url" translatable="false">https://www.theguardian.com/international</string>
     <string name="json_results_list_key" translatable="false">results</string>
