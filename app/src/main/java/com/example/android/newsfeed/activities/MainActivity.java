@@ -2,23 +2,26 @@ package com.example.android.newsfeed.activities;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.android.newsfeed.controllers.NewsListAdapter;
-import com.example.android.newsfeed.controllers.NewsLoader;
-import com.example.android.newsfeed.models.NewsModel;
 import com.example.android.newsfeed.R;
+import com.example.android.newsfeed.controllers.NewsListAdapter;
+import com.example.android.newsfeed.loaders.NewsLoader;
+import com.example.android.newsfeed.models.NewsModel;
 
 import java.util.List;
 
@@ -28,11 +31,11 @@ import java.util.List;
  * @package com.example.android.newsfeed
  * (c) 2018, Igor Korovchenko.
  */
-public class MainActivity extends FragmentActivity
+public class MainActivity extends AppCompatActivity
                           implements SwipeRefreshLayout.OnRefreshListener,
                                      SearchView.OnQueryTextListener,
                                      LoaderManager.LoaderCallbacks<List<NewsModel>>,
-        NewsLoader.OnNewsLoader {
+                                     NewsLoader.OnNewsLoader {
 
     private static final Integer REFRESH_DELAY = 2400;
 
@@ -63,6 +66,23 @@ public class MainActivity extends FragmentActivity
             updateData(searchQuery);
             swipeLayout.setRefreshing(false);
         }, REFRESH_DELAY);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.main_menu) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -148,8 +168,7 @@ public class MainActivity extends FragmentActivity
         if (newsAdapter.getItemCount() == 0) {
             newsList.setVisibility(View.GONE);
             emptyNewsList.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             newsList.setVisibility(View.VISIBLE);
             emptyNewsList.setVisibility(View.GONE);
         }

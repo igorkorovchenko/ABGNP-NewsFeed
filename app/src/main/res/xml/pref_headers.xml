@@ -1,0 +1,10 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.example.android.newsfeed.activities.SettingsActivity$DataFilterPreferenceFragment"
+        android:icon="@drawable/baseline_filter_list_24"
+        android:title="@string/pref_header_data_sync" />
+
+</preference-headers>

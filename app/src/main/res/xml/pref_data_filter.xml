@@ -1,0 +1,7 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.example.android.newsfeed.views.DynamicListPreference
+        android:key="pref_section"
+        android:title="@string/pref_title_from_date" />
+
+</PreferenceScreen>

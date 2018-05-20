@@ -1,9 +1,12 @@
-package com.example.android.newsfeed.controllers;
+package com.example.android.newsfeed.loaders;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -39,12 +42,15 @@ public class NewsLoader extends Loader<List<NewsModel>> {
     public static final Integer LOADER_ID = 1;
     public static final String ARGS_KEY_SEARCH = "search";
 
-    private GetNewsTask getTimeTask;
+    private GetNewsTask getNewsTask;
     private String searchString;
     private OnNewsLoader newsLoader;
+    @SuppressLint("StaticFieldLeak")
+    private Context context;
 
     public NewsLoader(Context context, Bundle args, OnNewsLoader newsLoader) {
         super(context);
+        this.context = context;
         if (args != null) {
             searchString = args.getString(ARGS_KEY_SEARCH);
         }
@@ -59,12 +65,13 @@ public class NewsLoader extends Loader<List<NewsModel>> {
     @Override
     protected void onForceLoad() {
         super.onForceLoad();
-        if (getTimeTask != null) {
-            getTimeTask.cancel(true);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String section = preferences.getString("pref_section", "");
+        if (getNewsTask != null) {
+            getNewsTask.cancel(true);
         }
-
-        getTimeTask = new GetNewsTask(newsLoader);
-        getTimeTask.execute(
+        getNewsTask = new GetNewsTask(newsLoader);
+        getNewsTask.execute(
                 getContext().getString(R.string.news_api_url),                  // 0
                 BuildConfig.THE_GUARDIAN_API_KEY,                               // 1
                 searchString,                                                   // 2
@@ -78,7 +85,8 @@ public class NewsLoader extends Loader<List<NewsModel>> {
                 getContext().getString(R.string.json_date_key),                 // 10
                 getContext().getString(R.string.json_tags_key),                 // 11
                 getContext().getString(R.string.json_author_key),               // 12
-                getContext().getString(R.string.json_exception_message)         // 13
+                getContext().getString(R.string.json_exception_message),        // 13
+                section                                                         // 14
         );
     }
 
@@ -106,7 +114,8 @@ public class NewsLoader extends Loader<List<NewsModel>> {
             urlString.append(strings[0])
                     .append("?api-key=").append(strings[1])
                     .append(strings[2])
-                    .append("&show-tags=contributor");
+                    .append("&show-tags=contributor")
+                    .append((!strings[14].equals("")) ? "&section=" + strings[14] : "");
             Log.d(TAG, String.valueOf(urlString));
             URL url = createUrl(String.valueOf(urlString));
             HttpURLConnection urlConnection = null;
@@ -117,7 +126,7 @@ public class NewsLoader extends Loader<List<NewsModel>> {
                 urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
-                if (urlConnection.getResponseCode() == 200) {
+                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     inputStream = urlConnection.getInputStream();
                     jsonResponse = extractNewsFromJson(
                             readFromStream(inputStream),
@@ -183,8 +192,8 @@ public class NewsLoader extends Loader<List<NewsModel>> {
                 JSONObject baseJsonResponse = new JSONObject(newsJson);
                 JSONObject newsResponse = baseJsonResponse.getJSONObject(responseKey);
                 JSONArray newsArray = newsResponse.getJSONArray(resultKey);
+                List<NewsModel> newList = new ArrayList<>();
                 if (newsArray.length() > 0) {
-                    List<NewsModel> newList = new ArrayList<>();
                     for (Integer i = 0; i < newsArray.length(); i++) {
                         JSONObject newsInfo = newsArray.getJSONObject(i);
                         String newsTitle = newsInfo.getString(titleKey);
@@ -208,8 +217,8 @@ public class NewsLoader extends Loader<List<NewsModel>> {
                                 String.valueOf(newsAuthor)
                         ));
                     }
-                    return newList;
                 }
+                return newList;
             } catch (JSONException e) {
                 Log.e(TAG, exceptionMessage, e);
             }

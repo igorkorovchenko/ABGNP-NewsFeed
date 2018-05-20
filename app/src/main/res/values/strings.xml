@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">News Feed</string>
     <string name="news_api_url" translatable="false">https://content.guardianapis.com/search</string>
+    <string name="sections_api_url" translatable="false">https://content.guardianapis.com/sections</string>
     <string name="default_site_url" translatable="false">https://www.theguardian.com/international</string>
     <string name="json_results_list_key" translatable="false">results</string>
     <string name="json_response_key" translatable="false">response</string>
     <string name="json_title_key" translatable="false">webTitle</string>
+    <string name="json_id_key" translatable="false">id</string>
     <string name="json_section_key" translatable="false">sectionName</string>
     <string name="json_url_key" translatable="false">webUrl</string>
     <string name="json_date_key" translatable="false">webPublicationDate</string>
@@ -14,4 +16,11 @@
     <string name="loader_error_response">Error response code:</string>
     <string name="loader_error_retrieving_json">Problem retrieving the news JSON results.</string>
     <string name="no_data_available">No date available</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_data_sync">Data filter</string>
+    <string name="pref_title_from_date">Not older than</string>
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="menu_settings">Settings</string>
 </resources>
